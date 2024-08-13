@@ -1,0 +1,6 @@
+plotly
+setuptools
+streamlit
+streamlit_extras
+streamlit_option_menu
+sqlitecloud

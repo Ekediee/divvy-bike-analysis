@@ -11,37 +11,60 @@ import sqlite3 as db
 # conns = sl.experimental_connection("divvydb22", type="sql")
 
 @sl.cache_data
-def fetch_data(year, month=None, prev_month=None):
+def fetch_data(year, month=None, prev_month=None, quarter=None, prev_quarter=None):
     con = db.connect("divvy.sqlite")
-    if prev_month is None:
-        if(year == 2022):
-            
-            data = pd.read_sql_query(f"select * from divvy_bike22 where month = '{month}'", con)
-            
-            return data
-        elif(year == 2023):
-            # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
-            
-            data = pd.read_sql_query(f"select * from divvy_bike23 where month = '{month}'", con)
+    
+    if quarter is None:
+        if prev_month is None:
+            if(year == 2022):
+                
+                data = pd.read_sql_query(f"select * from divvy_bike22 where month = '{month}'", con)
+                
+                return data
+            elif(year == 2023):
+                # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
+                
+                data = pd.read_sql_query(f"select * from divvy_bike23 where month = '{month}'", con)
 
-            return data
+                return data
+        else:
+            if(year == 2022):
+                
+                data = pd.read_sql_query(f"select * from divvy_bike22 where month_num = '{prev_month}'", con)
+                
+                return data
+            elif(year == 2023):
+                # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
+                
+                data = pd.read_sql_query(f"select * from divvy_bike23 where month_num = '{prev_month}'", con)
+
+                return data
     else:
-        if(year == 2022):
-            
-            data = pd.read_sql_query(f"select * from divvy_bike22 where month_num = '{prev_month}'", con)
-            
-            return data
-        elif(year == 2023):
-            # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
-            
-            data = pd.read_sql_query(f"select * from divvy_bike23 where month_num = '{prev_month}'", con)
+        if prev_quarter is None:
+            if(year == 2022):
+                
+                data = pd.read_sql_query(f"select * from divvy_bike22 where quarter = '{quarter}'", con)
+                
+                return data
+            elif(year == 2023):
+                # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
+                
+                data = pd.read_sql_query(f"select * from divvy_bike23 where quarter = '{quarter}'", con)
 
-            return data
+                return data
+        else:
+            if(year == 2022):
+                
+                data = pd.read_sql_query(f"select * from divvy_bike22 where quarter = '{prev_quarter}'", con)
+                
+                return data
+            elif(year == 2023):
+                # data = conn.query(f"select * from divvy_bike_share where month = '{month}'", ttl=timedelta(minutes=30))
+                
+                data = pd.read_sql_query(f"select * from divvy_bike23 where quarter = '{prev_quarter}'", con)
 
-# def get_data():
-#     df = pd.read_csv("./assets/divvy-data.csv")
-
-#     return df
+                return data
+            
 
 def clean_data(df):
 
@@ -54,6 +77,8 @@ def clean_data(df):
     trip_data["ended_at"] = pd.to_datetime(trip_data["ended_at"])
     trip_data['trip_duration'] = round((trip_data["ended_at"] - trip_data["started_at"]).dt.total_seconds()/60,1)
 
+    trip_data['quarter'] = trip_data['quarter'].str.capitalize()
+    trip_data['quarter_num'] = trip_data['quarter'].str.split(" ").str[1]
     trip_data['week_day'] = trip_data["started_at"].dt.strftime('%a')
     trip_data['day_num'] = trip_data['started_at'].dt.dayofweek
     trip_data['day_num'] = trip_data['day_num'].replace([6,0,1,2,3,4,5],[1,2,3,4,5,6,7])
@@ -62,8 +87,6 @@ def clean_data(df):
 
     return trip_data
 
-# dataset22 = clean_data(fetch_data22())
-# dataset23 = clean_data(fetch_data23())
 
 @sl.cache_data
 def indicator(value, title, suffix=None, reference=None):
@@ -321,21 +344,41 @@ def casual_chart(x, y, marker_color=None, orientation=None, text=None, title=Non
     )
     sl.plotly_chart(fig, use_container_width=True)
 
-def get_reference(year, month, isTotTrip=False):
+def get_reference(year, month=None, quarter=None, isTotTrip=False):
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
        'August', 'September', 'October', 'November', 'December']
     
-    month_nums = {i:months.index(i)+1 for i in months}
-    selected_month_num = month_nums[month]
+    quarters = ['Qtr 1', 'Qtr 2', 'Qtr 3', 'Qtr 4']
+    
+    if quarter:
+        quarter_nums = {i:quarters.index(i)+1 for i in quarters}
+        selected_quarter_num = quarter_nums[quarter]
+        # print(selected_quarter_num)
 
-    previous_month_data = clean_data(fetch_data(year, prev_month=selected_month_num-1))
-
-    if selected_month_num > 1:
-        if isTotTrip:
+        if selected_quarter_num > 1:
+            previous_quarter = "qtr "+str(selected_quarter_num-1)
+            previous_quarter_data = clean_data(fetch_data(year, quarter=quarter.lower(), prev_quarter=previous_quarter))
             
-            return previous_month_data.shape[0]
+            if isTotTrip:
+                
+                return previous_quarter_data.shape[0]
+            else:
+                return previous_quarter_data['trip_duration'].mean()
         else:
-            return previous_month_data['trip_duration'].mean()
+            refs = None
+            return refs
     else:
-        refs = None
-        return refs
+        month_nums = {i:months.index(i)+1 for i in months}
+        selected_month_num = month_nums[month]
+
+
+        if selected_month_num > 1:
+            previous_month_data = clean_data(fetch_data(year, prev_month=selected_month_num-1))
+            if isTotTrip:
+                
+                return previous_month_data.shape[0]
+            else:
+                return previous_month_data['trip_duration'].mean()
+        else:
+            refs = None
+            return refs

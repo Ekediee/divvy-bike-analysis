@@ -43,11 +43,23 @@ if selected == "Trips":
         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
         'August', 'September', 'October', 'November', 'December']
 
+        quarters = ['Qtr 1', 'Qtr 2', 'Qtr 3', 'Qtr 4']
+
+        checked = sl.checkbox("View Quarterly Report")
+
         year = sl.selectbox("Filter by Year", options=years, index=1)
-        month = sl.selectbox("Filter by Month", options=months, index=0)
+
+        if checked:
+            quarter = sl.selectbox("Filter by Quarter", options=quarters, index=0)
+            quarter = quarter.lower()
+        else:
+            month = sl.selectbox("Filter by Month", options=months, index=0)
 
 
-    filtered_data = clean_data(fetch_data(year, month))
+    if checked:
+        filtered_data = clean_data(fetch_data(year, quarter=quarter))
+    else:
+        filtered_data = clean_data(fetch_data(year, month=month))
 
 
     left_col, right_col = sl.columns([1, 2])
@@ -56,7 +68,11 @@ if selected == "Trips":
         total_trips, avg_duration = sl.columns(2)
 
         with total_trips:
-            reference = get_reference(year, month, isTotTrip=True)
+            if checked:
+                reference = get_reference(year, quarter=quarter.capitalize(), isTotTrip=True)
+            else:
+                reference = get_reference(year, month=month, isTotTrip=True)
+
             indicator(filtered_data.shape[0], "Total Trips", reference=reference)
 
         with avg_duration:
@@ -106,11 +122,23 @@ if selected == "Routes":
         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
         'August', 'September', 'October', 'November', 'December']
 
+        quarters = ['Qtr 1', 'Qtr 2', 'Qtr 3', 'Qtr 4']
+
+        checked = sl.checkbox("View Quarterly Report")
+
         year = sl.selectbox("Filter by Year", options=years, index=1)
-        month = sl.selectbox("Filter by Month", options=months, index=0)
+
+        if checked:
+            quarter = sl.selectbox("Filter by Quarter", options=quarters, index=0)
+            quarter = quarter.lower()
+        else:
+            month = sl.selectbox("Filter by Month", options=months, index=0)
 
 
-    filtered_data = clean_data(fetch_data(year, month))
+    if checked:
+        filtered_data = clean_data(fetch_data(year, quarter=quarter))
+    else:
+        filtered_data = clean_data(fetch_data(year, month=month))
 
 
     left_col, right_col = sl.columns([1, 2])

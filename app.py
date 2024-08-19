@@ -113,7 +113,7 @@ if selected == "Trips":
             'trip_duration': False
         }
 
-        plot(trip_duration_users(filtered_data), 'trip_duration', 'bike_type', title='Trip Duration by User type per Bike type', color='member_casual', text='trip_dur', color_discrete_map=color_discrete_map, labels=labels, hover_data=hover_data, orientation='v', height=255, width=270)
+        plot(trip_duration_users(filtered_data), 'trip_duration', 'bike_type', title='Trip Duration by User type per Bike', color='member_casual', text='trip_dur', color_discrete_map=color_discrete_map, labels=labels, hover_data=hover_data, orientation='v', height=255, width=270)
 
 if selected == "Routes":
     with sl.sidebar:

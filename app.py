@@ -15,7 +15,7 @@ from components.metric import (
 
 
 # ========= Page setup ======================
-sl.set_page_config(page_title="Sales Dashboard", page_icon=":bar_chart:", layout="wide")
+sl.set_page_config(page_title="Bikeshare Analytics", page_icon=":bar_chart:", layout="wide")
 
 from components.css import css
 

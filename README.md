@@ -2,13 +2,13 @@
 
 ![Title image](img/Bike.png)
 
-This project is the analysis of the **Google Data Analytics Professional Certicate** capstone task. I will be analyzing the user pattern of the membership types of Cyclistic, a bike share company in Chicago. Cyclistic's bike-share program features more than 5,800 bicycles and 600 docking stations. Cyclistic sets itself apart by also offering reclining bikes, hand tricycles, and cargo bikes, making bike-share more inclusive to people with disabilities and riders who can’t use a standard two-wheeled bike. The majority of riders opt for traditional bikes; about 8% of riders use the assistive options. Cyclistic users are more likely to ride for leisure, but about 30% use them to commute to work each day.
+This project is the analysis of the **Google Data Analytics Professional Certicate** capstone task. I analyzed the user pattern of the membership types of Lyft Bikes and Scooters, a bike share company in Chicago. Lyft's bike-share program features more than 5,800 bicycles and 600 docking stations. Lyft sets itself apart by also offering reclining bikes, hand tricycles, and cargo bikes, making bike-share more inclusive to people with disabilities and riders who can’t use a standard two-wheeled bike. The majority of riders opt for traditional bikes; about 8% of riders use the assistive options. Lyft users are more likely to ride for leisure, but about 30% use them to commute to work each day.
 
 ## Senario
 
-> The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, I have assigned to help the stakeholders to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, we will design a new marketing strategy to convert casual riders into annual members. But first, Cyclistic executives must approve my recommendations, so they must be backed up with compelling data insights and professional data visualizations.
+> The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, I have assigned to help the stakeholders to understand how casual riders and annual members use Lyft bikes differently. From these insights, we will design a new marketing strategy to convert casual riders into annual members. But first, Lyft executives must approve my recommendations, so they must be backed up with compelling data insights and professional data visualizations.
 
-**Business Task:** To identify how annual members and casual riders use Cyclistic bikes share differently.
+**Business Task:** To identify how annual members and casual riders use Lyft bikes share differently.
 
 **Goal:** Design marketing strategies aimed at converting casual riders into annual members.
 
@@ -27,7 +27,7 @@ The steps of analysis includes
    -  [Data Cleaning](#data-cleaning)
 
 -  [Exploratory Data Analysis](#exploratory-data-analysis)
--  [Data Visualization (with Streamlit dashboard)](#data-visualization)
+-  [Dashboard Visualization (with Streamlit dashboard)](#dashboard-visualization)
 -  [Recommendations](#recommendations)
 
 ### Data Collection
@@ -105,7 +105,7 @@ print(trip_data.shape)
 total_trips, _ = trip_data.shape
 ```
 
-The result shows that in the years 2022 and 2023, a total 11.3 million trips were recorded by Cyclistic bikes.
+The result shows that in the years 2022 and 2023, a total 11.3 million trips were recorded by Lyft bikes.
 
 Next, I will rename the columns ride_id and rideable_type with a more descriptive names - trip_id and bike_id respectively.
 
@@ -126,6 +126,8 @@ However, this observation will be communicated to the team lead for further inve
 
 ```python
 trip_data = trip_data.dropna(subset=["start_station_id", "end_station_id", "end_lat", "end_lng"])
+
+print(trip_data.isnull().sum())
 ```
 
 After cleaning the missing and empty values, it time to perform EDA to answer questions for further investigation.
@@ -147,53 +149,27 @@ num_of_valid_trips = (trip_data.shape)[0]
 
 num_of_valid_trips
 ```
+![Total trips](img/total_trip.png)
 
-There are a total of 8.7 million valid trips record by Cyclistic bikes between 2022 and 2023.
-
-### Exploratory Data Analysis
-
-At this point, I will be asking specific questions, and analysis the data to provide answers.
-
-#### What is the total number of valid trips?
-
-```{r}
-# Number of valid trips
-num_of_valid_trips = nrow(all_valid_trips)
-
-num_of_valid_trips
-```
-
-```r
-[1] 4474141
-```
-
-There are a total of 4.47 million valid trips record by Cyclistic bikes in the past 12 months.
+There are a total of 8.7 million valid trips record by Lyft bikes between 2022 and 2023.
 
 #### What is the number of trips with missing details?
 
-```r
-num_of_invalid_trips = number_of_records - num_of_valid_trips
+```python
+num_of_invalid_trips = total_trips - num_of_valid_trips
 
-num_of_invalid_trips
-```
-
-```r
-[1] 1354094
+print(num_of_invalid_trips)
 ```
 
 #### What percentage of the trip records were invalid?
 
-```r
-percent_of_invalid_trips = (num_of_invalid_trips/number_of_records)*100
+```python
+percent_of_invalid_trips = (num_of_invalid_trips/total_trips)*100
 
-percent_of_invalid_trips
+print(round(percent_of_invalid_trips,1))
 ```
 
-```r
-[1] 23.23335
-```
-
-The above results indicates that a total of 1.35 million records, which form 23.2% of the overrall trip records for the period were incorrectly captured.
+The results indicates that a total of 2.7 million records, which form 23.6% of the overrall trip records for the period were incorrectly captured.
 
 The ideal next thing to do will be to report this discovery to the management throught the team lead for further investigation on what went wrong with the incorrectly captured data, before continuing with the analysis.
 
@@ -201,218 +177,101 @@ The ideal next thing to do will be to report this discovery to the management th
 
 In order to better understand and make sense the trip data, two new columns (`trip_duration` and `week_day`) will be created.
 
-```r
-all_valid_trips <- all_valid_trips %>%
-  mutate(week_day = wday(started_at, label = TRUE), wday = wday(started_at))
+Convert date related columns to datetime objects, and create a `week_day` column
 
-all_valid_trips$trip_duration <-  round(as.numeric(difftime(all_valid_trips$ended_at, all_valid_trips$started_at))/60,2)
+```python
+trip_data["started_at"] = pd.to_datetime(trip_data["started_at"])
 
-head(all_valid_trips)
+trip_data["ended_at"] = pd.to_datetime(trip_data["ended_at"])
+
+trip_data['week_day'] = trip_data["started_at"].dt.day_name() # .strftime('%a') .strftime('%A')
 ```
 
 #### What is the average trip duration?
 
-```r
-with(all_valid_trips, round(mean(trip_duration),1))
+```python
+trip_data['trip_duration'] = round((trip_data["ended_at"] - trip_data["started_at"]).dt.total_seconds()/60,1)
+
+print(round(trip_data['trip_duration'].mean(),2))
 ```
 
-```r
-[1] 17.5
+Here, we can see that the average trip duration is 16.5 minutes per trip.
+
+Notice that the above calculation is in minutes, hence, we need to convert it to a proper time format i.e  `minute:seconds` format.
+
+```python
+trip_duration = str(int(round(trip_data['trip_duration'].mean(),2)//1))+':'+ str(int(round((round(trip_data['trip_duration'].mean(),2)%1)*60,1)))
+
+print(trip_duration)
+```
+Now, it is obvious that the average trip duration is 16:31 per trip.
+
+Add a new column to the dataframe to store the trip duration in the format of `minute:seconds`.
+
+![Avg. Duration](img/avg_duration.png)
+
+```python
+trip_data['trip_dur'] = (trip_data['trip_duration']//1).astype(int).astype(str)+':'+(((trip_data['trip_duration']%1)*60)//1).astype(int).astype(str)
 ```
 
-Here, we can see that the average trip duration is 17.5 minutes per trip.
-
-### Exploratory Data Analysis
-
-At this stage of the analysis, I will be using guided questions to explore the data.
+Having completed the preparatory stages, it is time to explore the data. At this stage of the analysis, Plotly charts will be used to visualize the data.
 
 #### What is the proportion of user types?
 
 Let's determine the proportion of the membership types on the trips records for the period of interest.
 
-```r
-all_valid_trips %>%
-  group_by(member_casual) %>%
-  summarise(number_of_trips = n()) %>%
-  ggplot(aes(x=member_casual, y=number_of_trips, fill = member_casual)) +
-  geom_bar(stat = "identity") +
-  theme_minimal()+
-  ggtitle("Proportion of User Types by Number of Trips")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))+
-  geom_text(aes(label=paste0(round((number_of_trips/1000000),2),"M ",
-                             paste0("(",round((number_of_trips/num_of_valid_trips)*100,1),"%",")"))))
-```
+![Proportion of membership types](img/proportion.png)
 
-![Proportion of membership types](img/user_proportion.png)
-
-> -  Casual riders made 40.4% of the total trips recorded.
-> -  Annual members made 59.6% of the recorded trips
+> -  Casual riders made 37.8% of the total trips recorded.
+> -  Annual members made 62.2% of the recorded trips
 
 #### What is the most used bike types by membership types?
 
-```r
-all_valid_trips %>%
-  group_by(member_casual, bike_id) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n(), .groups="keep") %>%
-  ggplot(aes(x=reorder(bike_id, -number_of_trips), y=number_of_trips, fill=member_casual))+
-  geom_bar(stat = "identity") +
-  theme_minimal()+
-  ggtitle("Most used Bikes by User Type")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))+
-  geom_text(aes(label=paste0(round((number_of_trips/1000),0),"K")))+
-  coord_flip()+
-  facet_wrap(~member_casual)
-```
+![Bike usage by membership type](img/trips_by_bike.png)
 
-![Bike usage by membership type](img/bike_usage.png)
-
-> -  Docked bikes are only used by casual riders, and covered 10.5% of their total trips.
 > -  Most used Bike by both user groups is Classic bikes
+> -  Docked bikes are only used by casual riders, and covered 7.6% of their total trips.
 
 #### What is the average trip duration by membership type?
 
-```r
-all_valid_trips %>%
-  group_by(member_casual, bike_id) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n(), .groups = "keep") %>%
-  ggplot(aes(x=member_casual, y=avg_trip_duration, fill=bike_id))+
-  geom_bar(stat = "identity")+
-  theme_minimal()+
-  ggtitle("Trip Duration by User type per Bike type")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))+
-  geom_text(aes(label=round(avg_trip_duration,1)))+
-  facet_wrap(~bike_id)
-```
-
-![Trip duration by membership type](img/trip_duration.png)
+![Trip duration by membership type](img/avg_duration_bike.png)
 
 > -  Casual riders travel longer time per trip on average when compared with annual members
 > -  Docked bike users traveled the longest trip duration on average.
 
-#### Which week days do casual riders record highest number of trips?
+#### Which week days do each membership type record highest number of trips?
 
-```r
-all_valid_trips %>%
-  filter(member_casual=="casual") %>%
-  group_by(week_day, wday) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n()) %>%
-  ggplot(aes(x=week_day, y=number_of_trips)) +
-  geom_bar(stat = "identity", fill = "sky blue") +
-  theme_minimal()+
-  ggtitle("Total trips per Weekday by Casual riders")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))
-```
-
-![Trips by week day by casual riders](img/weekday_trips.png)
+![Trips by week day by membership type](img/weekday_trips.png)
 
 > -  Casual riders record highest number of trips on weekends, with a peak on Saturdays
-
-#### Which week days do annual members record highest number of trips?
-
-```r
-all_valid_trips %>%
-  filter(member_casual=="member") %>%
-  group_by(week_day, wday) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n()) %>%
-  ggplot(aes(x=week_day, y=number_of_trips)) +
-  geom_bar(stat = "identity", fill = "#D5EA67") +
-  theme_minimal()+
-  ggtitle("Total trips per Weekday by Annual members")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))
-```
-
-![Trips by week day by annual members](img/weekday_trips2.png)
-
-> -  Annual members record higher number of trips between Mondays and Thursdays, with a peak on Tuesdays.
+> -  Annual members record higher number of trips between Tuesdays and Thursdays, with a peak on Tuesdays.
 
 #### Which week days do the membership types record highest average trip duration?
-
-```r
-all_valid_trips %>%
-  group_by(week_day, wday, member_casual) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n()) %>%
-  ggplot(aes(x=week_day, y=avg_trip_duration, fill=member_casual)) +
-  geom_bar(stat = "identity") +
-  theme_minimal()+
-  ggtitle("Avg. Trip duration per Weekday")+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))
-```
 
 ![Trip duration per week day by casual riders](img/weekday_trip_duration.png)
 
 > -  Casual riders travel twice as long as annual members in trip duration per day on average
 > -  Longer trip durations are recorded during weekends (Saturday & Sunday)
 
-#### What are the most used routes by the membership types?
+#### What are the most used routes by casual riders?
 
-To evaluate this measure, there is need to create the route column
-
-```r
-all_valid_trips$route <- paste(all_valid_trips$start_station_name, "_to_", all_valid_trips$end_station_name)
-
-head(all_valid_trips$route)
-```
-
-```r
-[1] "Michigan Ave & Oak St _to_ Michigan Ave & Oak St"
-[2] "Desplaines St & Kinzie St _to_ Kingsbury St & Kinzie St"
-[3] "Michigan Ave & Oak St _to_ Michigan Ave & Oak St"
-[4] "Michigan Ave & Oak St _to_ Michigan Ave & Oak St"
-[5] "Kingsbury St & Kinzie St _to_ Desplaines St & Kinzie St"
-[6] "Sheridan Rd & Noyes St (NU) _to_ Sheridan Rd & Noyes St (NU)"
-```
-
-#### Which routes are the most used routes by casual riders
-
-```r
-all_valid_trips %>%
-  filter(member_casual == "casual") %>%
-  group_by(route) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n(), .groups = "keep") %>%
-  arrange(-number_of_trips) %>%
-    head(5) %>%
-  ggplot(aes(x=reorder(route, +number_of_trips), y=number_of_trips))+
-  geom_bar(stat = "identity", fill="sky blue")+
-  theme_minimal()+
-  geom_text(aes(label=paste0(round((number_of_trips/1000),1),"K")))+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))+
-  coord_flip()
-```
-
-![Most used routes by casual riders](img/routes.png)
+![Most used routes by casual riders](img/routes1.png)
 
 > -  Most used route by Casual riders is a round trip - from and to Streeter Dr & Ave.
 > -  Majority of trips by Casual riders are round trips.
 
-#### Which routes are the most used routes by annual members
-
-```r
-all_valid_trips %>%
-  filter(member_casual == "member") %>%
-  group_by(route) %>%
-  summarise(avg_trip_duration = mean(trip_duration), number_of_trips = n(), .groups = "keep") %>%
-  arrange(-number_of_trips) %>%
-    head(5) %>%
-  ggplot(aes(x=reorder(route, +number_of_trips), y=number_of_trips))+
-  geom_bar(stat = "identity", fill="sky blue")+
-  theme_minimal()+
-  geom_text(aes(label=paste0(round((number_of_trips/1000),1),"K")))+
-  xlab("")+ylab("")+theme(axis.line = element_line(color='black'))+
-  coord_flip()
-```
+#### What are the most used routes by annual members
 
 ![Most used routes by annual members](img/routes2.png)
 
 > -  Most used route by annual members is Ellis Ave & 60th St to University Ave & 57th St
 > -  Trips by Annual Member are one way trip per time.
 
-### Data Visualization
+### Dashboard Visualization
 
-Using the Microsoft PowerBI platform, I came up with the dashboard visualization below to enable top management to easily visualize the insights in the dataset at a glance, to guide decision making.
+Using the `Streamlit` python library, I built a dashboard visualization enable top management to further drill the data and visualize the insights in the dataset at a glance, so as to guide decision making.
 
-The dynamic dashboard can be accessed [here](https://www.novypro.com/project/bike-share-user-analysis-by-ekeoma-agu)
-
-![Analysis dashboard](img/dashboard.png "This is the dashboard visualization of the analysis")
+The dynamic dashboard can be accessed [here](https://divvy-trips.streamlit.app)
 
 ### Recommendations
 

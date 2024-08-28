@@ -12,6 +12,16 @@ This project is the analysis of the **Google Data Analytics Professional Certica
 
 **Goal:** Design marketing strategies aimed at converting casual riders into annual members.
 
+## Installation
+
+To setup this project on your local machine, do the following steps:
+
+-  Clone the repository into your local machine
+- Ensure you have Python installed on your machine
+- Get into the project directory on terminal: `cd divvy-bike-analysis`
+- Install the required packages: `pip install -r requirements.txt`
+- Run the project: `streamlit run app.py`
+
 ## Steps of Analysis
 
 In this project, I intend to demonstrate the step by step process of data analytics problems. Therefore, I will be going through the various stages of data analysis. The following tools and libraries were used to complete the analysis and visualization - `Python Programming language`, `Pandas`, `Plotly`, `Jupyter Notebook`, and `Steamlit` for the dashboard visualization.
@@ -269,7 +279,7 @@ Let's determine the proportion of the membership types on the trips records for 
 
 ### Dashboard Visualization
 
-Using the `Streamlit` python library, I built a dashboard visualization enable top management to further drill the data and visualize the insights in the dataset at a glance, so as to guide decision making.
+Using the `Streamlit` python library, I built a dashboard visualization which enables top management to further drill the data and visualize the insights in the dataset at a glance, so as to guide decision making.
 
 The dynamic dashboard can be accessed [here](https://divvy-trips.streamlit.app)
 

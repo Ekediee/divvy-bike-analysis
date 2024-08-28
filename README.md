@@ -33,7 +33,7 @@ The steps of analysis includes
 -  [Data Collection](#data-collection)
 -  [Data Preprocessing](#data-preprocessing)
 
-   -  [Data validation and preparation](#data-validation-and-preparation)
+   -  [Data preparation and validation](#data-preparation-and-validation)
    -  [Data Cleaning](#data-cleaning)
 
 -  [Exploratory Data Analysis](#exploratory-data-analysis)

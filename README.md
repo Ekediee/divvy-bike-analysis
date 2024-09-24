@@ -6,7 +6,7 @@ This project is the analysis of the **Google Data Analytics Professional Certica
 
 ## Senario
 
-> The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, I have assigned to help the stakeholders to understand how casual riders and annual members use Lyft bikes differently. From these insights, we will design a new marketing strategy to convert casual riders into annual members. But first, Lyft executives must approve my recommendations, so they must be backed up with compelling data insights and professional data visualizations.
+> The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, I have been assigned to help the stakeholders to understand how casual riders and annual members use Lyft bikes differently. From these insights, we will design a new marketing strategy to convert casual riders into annual members. But first, Lyft executives must approve my recommendations, so they must be backed up with compelling data insights and professional data visualizations.
 
 **Business Task:** To identify how annual members and casual riders use Lyft bikes share differently.
 

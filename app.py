@@ -20,15 +20,16 @@ from components.metric import (
 # ========= Page setup ======================
 sl.set_page_config(page_title="Bikeshare Analytics", page_icon=":bar_chart:", layout="wide")
 
-# from components.css import css
+from components.css import css
 
 # go to webfx.com/tools/emoji-cheat-sheet/ for emoji's
 
-with open('style.css') as f:
-    css = f.read()
+# with open('style.css') as f:
+#     css = f.read()
 
 # ========= CSS ===============
-sl.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+# sl.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+sl.markdown(css, unsafe_allow_html=True)
 
 sl.header("Divvy Bike-Share Analytic :bar_chart:")
 

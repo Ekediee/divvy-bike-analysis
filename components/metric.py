@@ -127,7 +127,7 @@ def indicator(value, title, suffix=None, reference=None):
         },
     )
 
-    sl.plotly_chart(fig, use_container_width=False)
+    return fig
 
 @sl.cache_data
 def trip_duration(dataset):

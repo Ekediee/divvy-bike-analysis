@@ -1,5 +1,8 @@
 import streamlit as sl
 from streamlit_option_menu import option_menu
+import os
+import glob
+import pathlib
 
 from components.metric import (
     fetch_data, clean_data,
@@ -17,12 +20,15 @@ from components.metric import (
 # ========= Page setup ======================
 sl.set_page_config(page_title="Bikeshare Analytics", page_icon=":bar_chart:", layout="wide")
 
-from components.css import css
+# from components.css import css
 
 # go to webfx.com/tools/emoji-cheat-sheet/ for emoji's
 
+with open('style.css') as f:
+    css = f.read()
+
 # ========= CSS ===============
-sl.markdown(css, unsafe_allow_html=True)
+sl.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 sl.header("Divvy Bike-Share Analytic :bar_chart:")
 
@@ -73,7 +79,10 @@ if selected == "Trips":
             else:
                 reference = get_reference(year, month=month, isTotTrip=True)
 
-            indicator(filtered_data.shape[0], "Total Trips", reference=reference)
+            tot = indicator(filtered_data.shape[0], "Total Trips", reference=reference)
+            f_path = os.path.join(os.getcwd(), "tot.png")
+            tot.write_image(f_path)
+            sl.plotly_chart(tot, use_container_width=False)
 
         with avg_duration:
             indicator(0, 'Avg Duration', ":"+trip_duration(filtered_data))

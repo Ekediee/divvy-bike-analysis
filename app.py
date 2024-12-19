@@ -81,8 +81,8 @@ if selected == "Trips":
                 reference = get_reference(year, month=month, isTotTrip=True)
 
             tot = indicator(filtered_data.shape[0], "Total Trips", reference=reference)
-            f_path = os.path.join(os.getcwd(), "tot.png")
-            tot.write_image(f_path)
+            #f_path = os.path.join(os.getcwd(), "tot.png")
+            #tot.write_image(f_path)
             sl.plotly_chart(tot, use_container_width=False)
 
         with avg_duration:

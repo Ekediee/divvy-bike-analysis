@@ -108,7 +108,7 @@ if selected == "Trips":
             # text: 'Total Trips'
         }
 
-        plot(most_bikes(filtered_data, metric=1000), 'count', 'bike_type', title='Total trips by members per bike', orientation='v', color='member_casual', text='tot_trip', color_discrete_map=color_discrete_map, hover_data=hover_data, labels=labels, height=420, width=750)
+        plot(most_bikes(filtered_data, metric=1000), 'count', 'bike_type', title='Total trips by members per bike', orientation='v', color='member_casual', text='tot_trip', color_discrete_map=color_discrete_map, hover_data=hover_data, labels=labels, height=420, width=650)
 
     with left_col:
         donut_chart(rider_prop(filtered_data), "Proportion of Membership")
@@ -124,7 +124,7 @@ if selected == "Trips":
             'trip_duration': False
         }
 
-        plot(trip_duration_users(filtered_data), 'trip_duration', 'bike_type', title='Trip Duration by User type per Bike', color='member_casual', text='trip_dur', color_discrete_map=color_discrete_map, labels=labels, hover_data=hover_data, orientation='v', height=255, width=440)
+        plot(trip_duration_users(filtered_data), 'trip_duration', 'bike_type', title='Trip Duration by User type per Bike', color='member_casual', text='trip_dur', color_discrete_map=color_discrete_map, labels=labels, hover_data=hover_data, orientation='v', height=255, width=330)
 
 if selected == "Routes":
     with sl.sidebar:
@@ -175,7 +175,7 @@ if selected == "Routes":
 
         casual = get_casual_route(filtered_data)
 
-        casual_routes = casual_chart(casual['count'], casual['route'], marker_color=colors, orientation='h', text=casual['count'], title='Top 5 Routes of Casual riders Number trips', height=350, width=750)
+        casual_routes = casual_chart(casual['count'], casual['route'], marker_color=colors, orientation='h', text=casual['count'], title='Top 5 Routes of Casual riders Number trips', height=350, width=650)
 
         # routes by members
         colors = ['rgba(139,199,247,0.1)',]*5
@@ -186,7 +186,7 @@ if selected == "Routes":
 
         member = get_member_route(filtered_data)
 
-        member_routes = casual_chart(member['count'], member['route'], marker_color=colors, orientation='h', text=member['count'], title='Top 5 Routes of Annual Members Number trips', height=350, width=750)
+        member_routes = casual_chart(member['count'], member['route'], marker_color=colors, orientation='h', text=member['count'], title='Top 5 Routes of Annual Members Number trips', height=350, width=650)
 
     with left_col:
         lineplot(trips_per_day(filtered_data), 'week_day', 'count', 'Total trips per day per members', 'member_casual', height=350, width=270)

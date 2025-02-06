@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  divvy_analytics:
+    image: divvy-bike-analysis
+    build: .
+    ports:
+      - 8501:8501

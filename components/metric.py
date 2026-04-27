@@ -112,7 +112,7 @@ def indicator(value, title, suffix=None, reference=None):
     # fig.update_yaxes(visible=False, fixedrange=True)
     fig.update_layout(
         height=100,
-        width=305,
+        # width=305,
         paper_bgcolor='white',
         plot_bgcolor='white',
         template={
@@ -154,7 +154,7 @@ def donut_chart(df, title):
     fig.update_layout(
         legend=dict(orientation="v", yanchor="top", xanchor="right", y=2, x=0.95),
         height=300,
-        width=350,
+        # width=350,
         paper_bgcolor='white',
         plot_bgcolor='white',
         showlegend=True,
@@ -223,7 +223,7 @@ def plot(df, x, y, orientation=None, title=None, color=None, text=None, labels=N
         width=width,
     )
 
-    sl.plotly_chart(fig, use_container_width=False)
+    sl.plotly_chart(fig, use_container_width=True)
 
 @sl.cache_data
 def trips_per_day(df):
@@ -341,7 +341,7 @@ def casual_chart(x, y, marker_color=None, orientation=None, text=None, title=Non
         height=height,
         width=width,
     )
-    sl.plotly_chart(fig, use_container_width=False)
+    sl.plotly_chart(fig, use_container_width=True)
 
 def get_reference(year, month=None, quarter=None, isTotTrip=False):
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
